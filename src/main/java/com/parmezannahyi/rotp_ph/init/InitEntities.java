@@ -4,6 +4,7 @@ import com.parmezannahyi.rotp_ph.RotpPurpleHazeAddon;
 
 import com.parmezannahyi.rotp_ph.client.render.entity.renderer.PurpleHazeRenderer;
 import com.parmezannahyi.rotp_ph.entity.CapsuleProjectileEntity;
+import com.parmezannahyi.rotp_ph.entity.PurpleHazeCloudEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -27,4 +28,11 @@ public class InitEntities {
                     .sized(0.75F, 0.75F)
                     .setUpdateInterval(10)
                     .build(new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "capsule_projectile").toString()));
+    public static final RegistryObject<EntityType<PurpleHazeCloudEntity>> PURPLE_HAZE_CLOUD = ENTITIES.register("purple_haze_cloud",
+            () -> EntityType.Builder.<PurpleHazeCloudEntity>of(PurpleHazeCloudEntity::new, EntityClassification.MISC)
+                    .sized(0.1F, 0.1F)
+                    .fireImmune()
+                    .build(new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "purple_haze_cloud").toString()));
 }
+
+

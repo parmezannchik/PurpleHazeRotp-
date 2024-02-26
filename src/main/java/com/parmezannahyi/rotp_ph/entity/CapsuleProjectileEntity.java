@@ -66,25 +66,16 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
 
     @Override
     protected void onHitBlock(BlockRayTraceResult blockRayTraceResult){
-        AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(this.level,this.getX(),this.getY(),this.getZ());
-cloud.setParticle(InitParticles.PURPLE_HAZE_VIRUS.get());
-        int level = 0; // 1 уровень эффекта
-        cloud.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), level, 1));
-cloud.setDuration(240);
-cloud.moveTo(this.getX(),this.getY(),this.getZ());
-this.level.addFreshEntity(cloud);
-
-
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level);
+        cloud.moveTo(blockRayTraceResult.getLocation());
+        level.addFreshEntity(cloud);
     }
     @Override
     protected void afterEntityHit(EntityRayTraceResult entityRayTraceResult, boolean entityHurt) {
-        AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(this.level,this.getX(),this.getY(),this.getZ());
-        cloud.setParticle(InitParticles.PURPLE_HAZE_VIRUS.get());
-        cloud.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get()));
-        cloud.setDuration(240);
-        cloud.moveTo(this.getX(),this.getY(),this.getZ());
-        this.level.addFreshEntity(cloud);
         LivingEntity target = (LivingEntity)entityRayTraceResult.getEntity();
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level);
+        cloud.moveTo(target.getPosition(1));
+        level.addFreshEntity(cloud);
     target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(),240,2));
     }
 }

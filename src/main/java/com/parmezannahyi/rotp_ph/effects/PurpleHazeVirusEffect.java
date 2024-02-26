@@ -1,9 +1,12 @@
 package com.parmezannahyi.rotp_ph.effects;
 
+import com.parmezannahyi.rotp_ph.init.InitEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 
 public class PurpleHazeVirusEffect extends Effect {
 
@@ -23,8 +26,15 @@ public class PurpleHazeVirusEffect extends Effect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int level) {
-        if (entity.getHealth() > 1.0F) {
-            entity.hurt(DamageSource.MAGIC, 1.0F);
+        entity.hurt(DamageSource.MAGIC, 2 + level);
+    }
+    public static void applyVirus(LivingEntity entity, int level, int duration){
+        BlockPos pos = new BlockPos(entity.getPosition(1));
+        if (entity.level.isDay() && entity.level.canSeeSky(pos)){
+            duration = duration / 2;
+            level = Math.round((float) level/2);
         }
+        entity.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), duration, level));
     }
 }
+

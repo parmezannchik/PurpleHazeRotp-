@@ -1,8 +1,11 @@
 package com.parmezannahyi.rotp_ph.client;
 
 import com.github.standobyte.jojo.client.particle.MeteoriteVirusParticle;
+import com.github.standobyte.jojo.client.particle.custom.CustomParticlesHelper;
+import com.github.standobyte.jojo.client.resources.CustomResources;
 import com.parmezannahyi.rotp_ph.RotpPurpleHazeAddon;
 import com.parmezannahyi.rotp_ph.client.render.entity.renderer.CapsuleProjectileRenderer;
+import com.parmezannahyi.rotp_ph.client.render.entity.renderer.PurpleHazeCloudRenderer;
 import com.parmezannahyi.rotp_ph.client.render.entity.renderer.PurpleHazeRenderer;
 import com.parmezannahyi.rotp_ph.init.InitEntities;
 import com.parmezannahyi.rotp_ph.init.InitStands;
@@ -23,11 +26,13 @@ public class ClientInit {
         RenderingRegistry.registerEntityRenderingHandler(
                 InitStands. PURPLE_HAZE_STAND.getEntityType(), PurpleHazeRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(InitEntities.CAPSULE_PROJECTILE.get(), CapsuleProjectileRenderer::new);
-
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PURPLE_HAZE_CLOUD.get(), PurpleHazeCloudRenderer::new);
     }
     @SubscribeEvent
     public static void onMcConstructor(ParticleFactoryRegisterEvent event) {
         Minecraft mc = Minecraft.getInstance();
         mc.particleEngine.register(InitParticles.PURPLE_HAZE_VIRUS.get(), MeteoriteVirusParticle.Factory::new);
+        CustomParticlesHelper.saveSprites(mc);
+        CustomResources.initCustomResourceManagers(mc);
     }
 }

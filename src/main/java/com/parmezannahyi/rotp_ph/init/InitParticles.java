@@ -10,6 +10,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class InitParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, RotpPurpleHazeAddon.MOD_ID);
 
-    public static final RegistryObject<BasicParticleType> PURPLE_HAZE_VIRUS = PARTICLES.register("purple_haze_virus", () -> new BasicParticleType(false)); // lalala it goes around the world lalala
+    public static final RegistryObject<BasicParticleType> PURPLE_HAZE_VIRUS = PARTICLES.register("purple_haze_virus", () -> new BasicParticleType(false)); // ЕБУЧИЕ ПАРТИКЛЫ
 }
 
