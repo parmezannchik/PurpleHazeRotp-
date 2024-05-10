@@ -6,6 +6,7 @@ import com.parmezannahyi.rotp_ph.RotpPurpleHazeAddon;
 import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.util.ResourceLocation;
 
 public class PurpleHazeRenderer extends StandEntityRenderer<PurpleHazeEntity, PurpleHazeModel> {

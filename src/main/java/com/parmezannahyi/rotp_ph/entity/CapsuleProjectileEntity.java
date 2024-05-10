@@ -46,12 +46,12 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
 
     @Override
     protected float getBaseDamage() {
-        return 6;
+        return 0;
     }
 
     @Override
     protected float getMaxHardnessBreakable() {
-        return 100;
+        return 0;
     }
 
     @Override
@@ -66,16 +66,19 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
 
     @Override
     protected void onHitBlock(BlockRayTraceResult blockRayTraceResult){
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level);
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level, 1);
         cloud.moveTo(blockRayTraceResult.getLocation());
         level.addFreshEntity(cloud);
+        this.breakProjectile (TargetType.BLOCK, blockRayTraceResult);
     }
     @Override
     protected void afterEntityHit(EntityRayTraceResult entityRayTraceResult, boolean entityHurt) {
-        LivingEntity target = (LivingEntity)entityRayTraceResult.getEntity();
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level);
-        cloud.moveTo(target.getPosition(1));
-        level.addFreshEntity(cloud);
-    target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(),240,2));
+        if (entityRayTraceResult.getEntity() instanceof  LivingEntity){
+            LivingEntity target = (LivingEntity)entityRayTraceResult.getEntity();
+            PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level, 2);
+            cloud.moveTo(target.getPosition(1));
+            level.addFreshEntity(cloud);
+            target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(),240,2));
+        }
     }
 }

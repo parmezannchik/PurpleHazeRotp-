@@ -31,6 +31,6 @@ public class InitSounds {
 
 
 
-    public static final OstSoundList EXAMPLE_STAND_OST = new OstSoundList(
-            new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "example_stand_ost"), SOUNDS);
+    public static final OstSoundList PURPLE_HAZE_OST = new OstSoundList(
+            new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "purple_haze_ost"), SOUNDS);
 }

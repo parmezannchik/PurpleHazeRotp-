@@ -14,11 +14,9 @@ import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.parmezannahyi.rotp_ph.RotpPurpleHazeAddon;
-import com.parmezannahyi.rotp_ph.actions.stand.PurpleHazeCapsuleShot;
+import com.parmezannahyi.rotp_ph.actions.stand.*;
 import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 
-import com.parmezannahyi.rotp_ph.init.InitEntities;
-import com.parmezannahyi.rotp_ph.init.InitSounds;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -34,31 +32,38 @@ public class InitStands {
 
 
     // Дядя Бит крутой...
-    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTIONS.register("example_stand_punch",
-            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder()
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTIONS.register("purple_haze_punch",
+            () -> new PurpleHazePunch(new StandEntityLightAttack.Builder()
                     .punchSound(InitSounds.PURPLE_HAZE_PUNCH_LIGHT)));
 
-    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_BARRAGE = ACTIONS.register("example_stand_barrage",
-            () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_BARRAGE = ACTIONS.register("purple_haze_barrage",
+            () -> new PurpleHazeBarrage(new StandEntityMeleeBarrage.Builder()
                     .barrageHitSound(InitSounds.PURPLE_HAZE_PUNCH_BARRAGE)));
 
-    public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_FINISHER_PUNCH = ACTIONS.register("example_stand_finisher_punch",
-            () -> new StandEntityHeavyAttack(new StandEntityHeavyAttack.Builder() // TODO finisher ability
+
+    public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_VIRAL_PUNCH = ACTIONS.register("purple_haze_viral_punch",
+            () -> new PurpleHazeViralPunch (new StandEntityHeavyAttack.Builder()
                     .punchSound(InitSounds.PURPLE_HAZE_PUNCH_HEAVY)
                     .partsRequired(StandPart.ARMS)));
 
-    public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_HEAVY_PUNCH = ACTIONS.register("example_stand_heavy_punch",
-            () -> new StandEntityHeavyAttack(new StandEntityHeavyAttack.Builder()
+    public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_HEAVY_PUNCH = ACTIONS.register("purple_haze_heavy_punch",
+            () -> new PurpleHazeHeavyPunch (new StandEntityHeavyAttack.Builder()
                     .shiftVariationOf(PURPLE_HAZE_PUNCH).shiftVariationOf(PURPLE_HAZE_BARRAGE)
-                    .setFinisherVariation(PURPLE_HAZE_FINISHER_PUNCH)
+                    .setFinisherVariation(PURPLE_HAZE_VIRAL_PUNCH)
                     .punchSound(InitSounds.PURPLE_HAZE_PUNCH_HEAVY)
                     .partsRequired(StandPart.ARMS)));
+
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_BLOCK = ACTIONS.register("purple_haze_block",
-            () -> new StandEntityBlock());
+            () -> new PurpleHazeBlock ());
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_CAPSULE_SHOT = ACTIONS.register("purple_haze_capsule_shot",
-            () -> new PurpleHazeCapsuleShot(new StandEntityAction.Builder()));
+            () -> new PurpleHazeCapsuleShot(new StandEntityAction.Builder().cooldown (20).resolveLevelToUnlock (2)));
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_VIRUS_AURA = ACTIONS.register("purple_haze_virus_aura",
+            () -> new PurpleHazeVirusAura (new StandEntityAction.Builder().resolveLevelToUnlock (3)));
+
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS_BARRAGE = ACTIONS.register("purple_haze_madness_barrage",
+            () -> new PurpleHazeMadnessBarrage (new StandEntityMeleeBarrage.Builder ()));
 
 
 
@@ -67,10 +72,10 @@ public class InitStands {
 
     // ...then create the Stand type instance. Moves, stats, entity sizes, and a few other things are determined here.
     public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<PurpleHazeEntity>> PURPLE_HAZE_STAND =
-            new EntityStandRegistryObject<>("example_stand",
+            new EntityStandRegistryObject<>("purple_haze",
                     STANDS,
                     () -> new EntityStandType.Builder<StandStats>()
-                            .color(0x00AFAF)
+                            .color(0x8f3fb1)
                             .storyPartName(ModStandsInit.PART_5_NAME)
                             .leftClickHotbar(
                                     PURPLE_HAZE_PUNCH.get(),
@@ -78,19 +83,20 @@ public class InitStands {
                                     PURPLE_HAZE_CAPSULE_SHOT.get() //
                             )
                             .rightClickHotbar(
-                                    PURPLE_HAZE_BLOCK.get()
+                                    PURPLE_HAZE_BLOCK.get(),
+                                    PURPLE_HAZE_VIRUS_AURA.get ()
 
                             )
                             .defaultStats(StandStats.class, new StandStats.Builder()
                                     .tier(5)
                                     .power(14)
                                     .speed(12)
-                                    .range(5, 5)
+                                    .range(5, 10)
                                     .durability(3)
                                     .precision(4)
                                     .build())
                             .addSummonShout(InitSounds.EXAMPLE_STAND_SUMMON_VOICELINE)
-                            .addOst(InitSounds.EXAMPLE_STAND_OST)
+                            .addOst(InitSounds.PURPLE_HAZE_OST)
                             .build(),
 
                     InitEntities.ENTITIES,
