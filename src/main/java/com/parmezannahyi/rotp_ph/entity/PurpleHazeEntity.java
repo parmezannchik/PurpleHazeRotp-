@@ -1,13 +1,18 @@
 package com.parmezannahyi.rotp_ph.entity;
 
+import java.util.Comparator;
+import java.util.List;
+
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
+import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.parmezannahyi.rotp_ph.init.InitEffects;
 import com.parmezannahyi.rotp_ph.init.InitStands;
+
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -21,8 +26,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class PurpleHazeEntity extends StandEntity {
     private static final DataParameter<Integer> CAPSULES_COUNT = EntityDataManager.defineId(PurpleHazeEntity.class, DataSerializers.INT);
@@ -115,43 +118,56 @@ public class PurpleHazeEntity extends StandEntity {
             }
         }
         if (this.isMad()) {
-            List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange()), entity -> (entity instanceof LivingEntity && this.checkTargets(entity)));
-            if (!entitiesAround.isEmpty()) {
-                entitiesAround.forEach(entity -> {
-                    if (entity instanceof LivingEntity) {
-                        LivingEntity livingTarget = (LivingEntity) entity;
-                        if (livingTarget.getHealth() > 0) {
-                            ActionTarget actionTarget = new ActionTarget(livingTarget);
-                            StandEntityAction punch = InitStands.PURPLE_HAZE_PUNCH.get();
-                            StandEntityAction barrage = InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get();
-                            StandEntityAction heavyPunch = InitStands.PURPLE_HAZE_HEAVY_PUNCH.get();
-                            this.moveToTarget(livingTarget);
+            LivingEntity livingTarget = null;
+            
+            Entity curTarget = getCurrentTask().map(StandEntityTask::getTarget).orElse(ActionTarget.EMPTY).getEntity();
+            if (curTarget instanceof LivingEntity && curTarget.isAlive() && curTarget.distanceToSqr(user) < getMaxRange() * getMaxRange()) {
+                livingTarget = (LivingEntity) curTarget;
+            }
+            else {
+                List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange()), 
+                        entity -> (entity instanceof LivingEntity && this.checkTargets(entity)));
+                if (!entitiesAround.isEmpty()) {
+                    Entity closestEntity = entitiesAround.stream()
+                            .min(Comparator.comparingDouble(
+                                    target -> target.distanceToSqr(this)))
+                            .get();
+                    // 6 строчками выше уже есть проверка на instanceof LivingEntity, когда мы берем лист всех сущностей вокруг, еще раз проверять не нужно
+                    livingTarget = (LivingEntity) closestEntity; 
+                }
+            }
+            
+            if (livingTarget != null) {
+                if (livingTarget.getHealth() > 0) {
+                    ActionTarget actionTarget = new ActionTarget(livingTarget);
+                    StandEntityAction punch = InitStands.PURPLE_HAZE_PUNCH.get();
+                    StandEntityAction barrage = InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get();
+                    StandEntityAction heavyPunch = InitStands.PURPLE_HAZE_HEAVY_PUNCH.get();
+                    this.moveToTarget(livingTarget);
 
-                            if (this.getStaminaCondition() > 0.25) {
-                                if (this.getFinisherMeter() > 0.3 && !this.isBeingRetracted()) {
-                                    if (this.getCurrentTaskAction() != barrage) {
-                                        this.setTask(barrage, 60, StandEntityAction.Phase.PERFORM, actionTarget);
-                                    }
-                                    if (this.getFinisherMeter() > 0.7 && (livingTarget.getHealth() / livingTarget.getMaxHealth())<  0.15){
-                                        this.stopTask();
-                                        this.setTask(heavyPunch, heavyPunch.getStandActionTicks(this.getUserPower(), this), StandEntityAction.Phase.WINDUP, actionTarget);
-                                        madnessBarrageTime = 0;
-                                    }
-                                }
-                                else {
-                                    this.setTask(punch, 10, StandEntityAction.Phase.PERFORM, actionTarget);
-                                }
+                    if (this.getStaminaCondition() > 0.25) {
+                        if (this.getFinisherMeter() > 0.3 && !this.isBeingRetracted()) {
+                            if (this.getCurrentTaskAction() != barrage) {
+                                this.setTask(barrage, 60, StandEntityAction.Phase.PERFORM, actionTarget);
+                            }
+                            if (this.getFinisherMeter() > 0.7 && (livingTarget.getHealth() / livingTarget.getMaxHealth())<  0.15){
+                                this.stopTask();
+                                this.setTask(heavyPunch, heavyPunch.getStandActionTicks(this.getUserPower(), this), StandEntityAction.Phase.WINDUP, actionTarget);
+                                madnessBarrageTime = 0;
                             }
                         }
+                        else {
+                            this.setTask(punch, 10, StandEntityAction.Phase.PERFORM, actionTarget);
+                        }
                     }
-                });
+                }
             }
             else {
                 this.retractWhenOver();
             }
 
             if (isManuallyControlled()) {
-                if (getUser() instanceof PlayerEntity) {
+                if (user instanceof PlayerEntity) {
                     PlayerEntity player = (PlayerEntity) getUser();
                     StandUtil.setManualControl(player, false, false);
                     player.displayClientMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
