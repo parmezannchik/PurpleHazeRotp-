@@ -9,7 +9,7 @@ import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 
 public class PurpleHazeMadnessBarrage extends StandEntityMeleeBarrage {
     public PurpleHazeMadnessBarrage (Builder builder){
-        super(builder.heldWalkSpeed (5));
+        super(builder.heldWalkSpeed(1).standUserWalkSpeed(1));
     }
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {

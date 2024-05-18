@@ -28,7 +28,7 @@ import java.util.List;
 public class PurpleHazeEntity extends StandEntity {
     private static final DataParameter<Integer> CAPSULES_COUNT = EntityDataManager.defineId(PurpleHazeEntity.class, DataSerializers.INT);
     private static final DataParameter<Boolean> MAD_HAS_TARGET = EntityDataManager.defineId(PurpleHazeEntity.class, DataSerializers.BOOLEAN);
-    public PurpleHazeEntity (StandEntityType<com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity> type, World world) {
+    public PurpleHazeEntity (StandEntityType<PurpleHazeEntity> type, World world) {
         super (type, world);
     }
     boolean madness;
