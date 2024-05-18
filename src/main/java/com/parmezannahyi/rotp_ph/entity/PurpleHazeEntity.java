@@ -2,17 +2,16 @@ package com.parmezannahyi.rotp_ph.entity;
 
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
-import com.github.standobyte.jojo.client.ClientUtil;
-import com.github.standobyte.jojo.client.StandController;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.ModStatusEffects;
+import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.parmezannahyi.rotp_ph.init.InitEffects;
 import com.parmezannahyi.rotp_ph.init.InitStands;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -40,7 +39,7 @@ public class PurpleHazeEntity extends StandEntity {
 
     public void retractWhenOver(){
         if (!this.isFollowingUser()) {
-            this.setManualControl (false, false);
+//            this.setManualControl (false, false);
             entityData.set(MAD_HAS_TARGET, false);
             this.retractStand (false);
 
@@ -111,7 +110,7 @@ public class PurpleHazeEntity extends StandEntity {
                     target.addEffect (new EffectInstance (InitEffects.PH_VIRUS.get (), 100, 0));
             }
         }
-        if (this.isMad () && this.getStaminaCondition () > 0.25) {
+        if (this.isMad ()) {
             List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange ()), entity -> (entity instanceof LivingEntity && this.checkTargets (entity)));
             if (!entitiesAround.isEmpty ()) {
                 entitiesAround.forEach(entity -> {
@@ -124,18 +123,20 @@ public class PurpleHazeEntity extends StandEntity {
                             StandEntityAction heavyPunch = InitStands.PURPLE_HAZE_HEAVY_PUNCH.get ();
                             this.moveToTarget (livingTarget);
 
-                            if (this.getFinisherMeter ()> 0.3 && !this.isBeingRetracted ()) {
-                                if (this.getCurrentTaskAction () != barrage){
-                                    this.setTask (barrage, 60, StandEntityAction.Phase.PERFORM, actionTarget);
+                            if (this.getStaminaCondition () > 0.25) {
+                                if (this.getFinisherMeter ()> 0.3 && !this.isBeingRetracted ()) {
+                                    if (this.getCurrentTaskAction () != barrage){
+                                        this.setTask (barrage, 60, StandEntityAction.Phase.PERFORM, actionTarget);
+                                    }
+                                    if (this.getFinisherMeter () > 0.7 && (livingTarget.getHealth ()/livingTarget.getMaxHealth ())<0.15){
+                                        this.stopTask ();
+                                        this.setTask (heavyPunch, heavyPunch.getStandActionTicks (this.getUserPower (), this), StandEntityAction.Phase.WINDUP, actionTarget);
+                                        madnessBarrageTime = 0;
+                                    }
                                 }
-                                if (this.getFinisherMeter () > 0.7 && (livingTarget.getHealth ()/livingTarget.getMaxHealth ())<0.15){
-                                    this.stopTask ();
-                                    this.setTask (heavyPunch, heavyPunch.getStandActionTicks (this.getUserPower (), this), StandEntityAction.Phase.WINDUP, actionTarget);
-                                    madnessBarrageTime = 0;
+                                else {
+                                    this.setTask (punch, 10, StandEntityAction.Phase.PERFORM, actionTarget);
                                 }
-                            }
-                            else {
-                                this.setTask (punch, 10, StandEntityAction.Phase.PERFORM, actionTarget);
                             }
                         }
                     }
@@ -144,10 +145,13 @@ public class PurpleHazeEntity extends StandEntity {
             else {
                 this.retractWhenOver();
             }
-            Minecraft mc = Minecraft.getInstance ();
-            if (level.isClientSide() && StandController.getInstance ().isControllingStand () && ClientUtil.getCameraEntity () != mc.player){
-                ClientUtil.setCameraEntityPreventShaderSwitch(mc, mc.player);
-                ClientUtil.setOverlayMessage (new TranslationTextComponent ("jojo.message.action_condition.cant_control_stand"));
+
+            if (isManuallyControlled()) {
+                if (getUser() instanceof PlayerEntity) {
+                    PlayerEntity player = (PlayerEntity) getUser();
+                    StandUtil.setManualControl(player, false, false);
+                    player.displayClientMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
+                }
             }
         }
 
