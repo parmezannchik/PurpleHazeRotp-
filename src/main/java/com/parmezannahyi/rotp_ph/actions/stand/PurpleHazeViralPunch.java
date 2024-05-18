@@ -27,32 +27,35 @@ public class PurpleHazeViralPunch extends StandEntityHeavyAttack {
         }
         return ActionConditionResult.POSITIVE;
     }
-    public PurpleHazeViralPunch(StandEntityHeavyAttack.Builder builder){
+
+    public PurpleHazeViralPunch(StandEntityHeavyAttack.Builder builder) {
         super(builder);
     }
+
     @Override
     public StandEntityPunch punchEntity(StandEntity stand, Entity target, StandEntityDamageSource dmgSource) {
-        if (target instanceof LivingEntity){
+        if (target instanceof LivingEntity) {
             LivingEntity livingTarget = (LivingEntity) target;
             PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-            if (purpleHaze.getCapsuleCount () > 0){
-                livingTarget.addEffect (new EffectInstance (InitEffects.PH_VIRUS.get (), 200, 0));
-                purpleHaze.useCapsule ();
+            if (purpleHaze.getCapsuleCount() > 0) {
+                livingTarget.addEffect(new EffectInstance (InitEffects.PH_VIRUS.get(), 200, 0));
+                purpleHaze.useCapsule();
             }
         }
         return super.punchEntity(stand, target, dmgSource)
                 .addKnockback(0.5F + stand.getLastHeavyFinisherValue())
                 .disableBlocking((float) stand.getProximityRatio(target) - 0.25F);
     }
+
     @Override
     public StandBlockPunch punchBlock(StandEntity stand, BlockPos pos, BlockState state) {
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity (stand.level, 1);
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(stand.level, 1);
 
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-        if (purpleHaze.getCapsuleCount () > 0){
-            cloud.moveTo (pos, 1, 1);
-            stand.level.addFreshEntity (cloud);
-            purpleHaze.useCapsule ();
+        if (purpleHaze.getCapsuleCount() > 0) {
+            cloud.moveTo(pos, 1, 1);
+            stand.level.addFreshEntity(cloud);
+            purpleHaze.useCapsule();
         }
         return super.punchBlock(stand, pos, state);
 

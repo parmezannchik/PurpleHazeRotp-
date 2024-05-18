@@ -11,8 +11,8 @@ public class PurpleHazeBlock extends StandEntityBlock {
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-        if (purpleHaze.isMad ()){
-            return conditionMessage ("cant_control_stand");
+        if (purpleHaze.isMad()) {
+            return conditionMessage("cant_control_stand");
         }
         return ActionConditionResult.POSITIVE;
     }

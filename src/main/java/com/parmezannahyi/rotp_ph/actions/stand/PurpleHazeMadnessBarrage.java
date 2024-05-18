@@ -8,14 +8,15 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 
 public class PurpleHazeMadnessBarrage extends StandEntityMeleeBarrage {
-    public PurpleHazeMadnessBarrage (Builder builder){
+    public PurpleHazeMadnessBarrage(Builder builder) {
         super(builder.heldWalkSpeed(1).standUserWalkSpeed(1));
     }
+
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-        if (purpleHaze.isMad ()){
-            return conditionMessage ("cant_control_stand");
+        if (purpleHaze.isMad()) {
+            return conditionMessage("cant_control_stand");
         }
         return ActionConditionResult.POSITIVE;
     }

@@ -13,19 +13,23 @@ public class PurpleHazeVirusAura extends StandEntityAction {
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-        if (purpleHaze.isMad ()){
-            return conditionMessage ("cant_control_stand");
+        if (purpleHaze.isMad()) {
+            return conditionMessage("cant_control_stand");
         }
         if (purpleHaze.isCloseToUser ()){
-            return conditionMessage ("can_hurt_user");
+            return conditionMessage("can_hurt_user");
         }
         return ActionConditionResult.POSITIVE;
     }
-    public PurpleHazeVirusAura(StandEntityAction.Builder builder){super(builder);}
+
+    public PurpleHazeVirusAura(StandEntityAction.Builder builder){
+        super(builder);
+    }
+
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) standEntity;
-        purpleHaze.setAuraActive (!purpleHaze.hasAura ());
+        purpleHaze.setAuraActive(!purpleHaze.hasAura());
 
     }
 }

@@ -9,13 +9,14 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 
 public class PurpleHazeHeavyPunch extends StandEntityHeavyAttack {
-    public PurpleHazeHeavyPunch(StandEntityHeavyAttack.Builder builder){
+    public PurpleHazeHeavyPunch(StandEntityHeavyAttack.Builder builder) {
         super(builder);
     }
+
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) stand;
-        if (purpleHaze.isMad ()){
+        if (purpleHaze.isMad()) {
             return conditionMessage ("cant_control_stand");
         }
         return ActionConditionResult.POSITIVE;

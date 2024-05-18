@@ -27,7 +27,7 @@ public class PurpleHazeVirusEffect extends UncurableEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int level) {
-        entity.hurt(DamageSource.MAGIC, level+0.5F);
+        entity.hurt(DamageSource.MAGIC, level + 0.5F);
     }
     public static void applyVirus(LivingEntity entity, int level, int duration){
         // if (!entity.hasEffect(InitEffects.VIRUS_IMMUNE.get())){ //для Голда Екиспиренса

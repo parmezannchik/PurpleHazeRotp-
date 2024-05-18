@@ -1,6 +1,4 @@
-
 package com.parmezannahyi.rotp_ph.entity;
-
 
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.parmezannahyi.rotp_ph.effects.PurpleHazeVirusEffect;
@@ -35,21 +33,21 @@ public class PurpleHazeCloudEntity extends Entity {
         this.livetime++;
         Vector3d thisPos = position();
         Vector3d randomOffset = new Vector3d(
-                (random.nextDouble()*(livetime /20) - 0.5) * (random.nextDouble() - random.nextDouble()),
-                random.nextDouble()*(livetime/20) - 0.5,
-                (random.nextDouble()*(livetime/20) - 0.5) * (random.nextDouble() - random.nextDouble()));
+                (random.nextDouble() * (livetime / 20) - 0.5) * (random.nextDouble() - random.nextDouble()),
+                random.nextDouble() * (livetime / 20) - 0.5,
+                (random.nextDouble() * (livetime/ 20) - 0.5) * (random.nextDouble() - random.nextDouble()));
         Vector3d entityPosition = thisPos.add(randomOffset);
-        level.getEntities(this, this.getBoundingBox().inflate(((livetime /20) - 0.5 )* spreadSpeed), entity -> !(entity instanceof StandEntity)).forEach(target -> {
-            if (target instanceof LivingEntity){
-                LivingEntity livingtarget=(LivingEntity)target;
+        level.getEntities(this, this.getBoundingBox().inflate(((livetime /20) - 0.5) * spreadSpeed), entity -> !(entity instanceof StandEntity)).forEach(target -> {
+            if (target instanceof LivingEntity) {
+                LivingEntity livingtarget = (LivingEntity)target;
 
-                PurpleHazeVirusEffect.applyVirus(livingtarget , (int)Math.round(livetime/80), (int)livetime/2);
+                PurpleHazeVirusEffect.applyVirus(livingtarget , (int)Math.round(livetime / 80), (int)livetime / 2);
             }
         });
         for (int i = 0; i < 8; i++) {
-            level.addParticle(InitParticles.PURPLE_HAZE_VIRUS.get(), entityPosition.x, entityPosition.y, entityPosition.z, 0,  0, 0);
+            level.addParticle(InitParticles.PURPLE_HAZE_VIRUS.get(), entityPosition.x, entityPosition.y, entityPosition.z, 0, 0, 0);
         }
-        if (this.livetime==200){
+        if (this.livetime == 200){
             this.remove();
         }
     }
@@ -70,6 +68,7 @@ public class PurpleHazeCloudEntity extends Entity {
     @Override
     public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }}
+    }
+}
 
 

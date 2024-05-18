@@ -18,7 +18,7 @@ public class InitEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(
             ForgeRegistries.ENTITIES, RotpPurpleHazeAddon.MOD_ID);
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(AddonStands.PURPLE_HAZE.getEntityType(), PurpleHazeRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitStands.PURPLE_HAZE_STAND.getEntityType(), PurpleHazeRenderer::new);
 
 
 
