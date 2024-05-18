@@ -18,8 +18,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -27,6 +27,7 @@ import java.util.List;
 
 public class PurpleHazeEntity extends StandEntity {
     private static final DataParameter<Integer> CAPSULES_COUNT = EntityDataManager.defineId(PurpleHazeEntity.class, DataSerializers.INT);
+    private static final DataParameter<Boolean> MAD_HAS_TARGET = EntityDataManager.defineId(PurpleHazeEntity.class, DataSerializers.BOOLEAN);
     public PurpleHazeEntity (StandEntityType<com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity> type, World world) {
         super (type, world);
     }
@@ -40,6 +41,7 @@ public class PurpleHazeEntity extends StandEntity {
     public void retractWhenOver(){
         if (!this.isFollowingUser()) {
             this.setManualControl (false, false);
+            entityData.set(MAD_HAS_TARGET, false);
             this.retractStand (false);
 
         }
@@ -55,6 +57,7 @@ public class PurpleHazeEntity extends StandEntity {
     protected void defineSynchedData () {
         super.defineSynchedData ();
         entityData.define(CAPSULES_COUNT, 6);
+        entityData.define(MAD_HAS_TARGET, false);
     }
 
     @Override
@@ -62,14 +65,26 @@ public class PurpleHazeEntity extends StandEntity {
         super.onSyncedDataUpdated (dataParameter);
     }
 
+    @Override
+    public boolean isFollowingUser() {
+        return !entityData.get(MAD_HAS_TARGET) && super.isFollowingUser();
+    }
 
     private void moveToTarget (LivingEntity target) {
-        ActionTarget actionTarget = new ActionTarget (target);
-        this.setManualControl (true, true);
-        Vector3d standPos = this.getPosition (1);
-            Vector3d targetPos = new Vector3d (actionTarget.getTargetPos (false).x, actionTarget.getTargetPos (false).y, actionTarget.getTargetPos (false).z);
-        this.setDeltaMovement ((targetPos.x () - standPos.x ()) / 10, (targetPos.y () - standPos.y ()) / 32, (targetPos.z () - standPos.z ()) / 10);
-        this.lookAt (EntityAnchorArgument.Type.FEET, targetPos);
+//        this.setManualControl (true, true);
+        entityData.set(MAD_HAS_TARGET, true);
+        setStandFlag(StandFlag.BEING_RETRACTED, false);
+        Vector3d standPos = this.position();
+        Vector3d targetPos = target.position();
+        Vector3d vecToTarget = targetPos.subtract(standPos);
+        double distanceSqr = vecToTarget.lengthSqr();
+        double minDistance = target.getBbWidth() + this.getBbWidth() + 1;
+        if (distanceSqr < minDistance * minDistance) {
+            targetPos = targetPos.subtract(vecToTarget.normalize().scale(minDistance));
+            vecToTarget = targetPos.subtract(standPos);
+        }
+        this.setDeltaMovement (vecToTarget.x / 10, vecToTarget.y / 32, vecToTarget.z / 10);
+//        this.lookAt (EntityAnchorArgument.Type.FEET, targetPos); 
         this.lookAt (EntityAnchorArgument.Type.EYES, target.getEyePosition (1));
     }
 
@@ -96,7 +111,7 @@ public class PurpleHazeEntity extends StandEntity {
                     target.addEffect (new EffectInstance (InitEffects.PH_VIRUS.get (), 100, 0));
             }
         }
-        if (this.isMad () && this.getStaminaCondition () > 0) {
+        if (this.isMad () && this.getStaminaCondition () > 0.25) {
             List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange ()), entity -> (entity instanceof LivingEntity && this.checkTargets (entity)));
             if (!entitiesAround.isEmpty ()) {
                 entitiesAround.forEach(entity -> {
@@ -126,15 +141,37 @@ public class PurpleHazeEntity extends StandEntity {
                     }
                 });
             }
-            this.retractWhenOver();
+            else {
+                this.retractWhenOver();
+            }
             Minecraft mc = Minecraft.getInstance ();
-            if (StandController.getInstance ().isControllingStand () && ClientUtil.getCameraEntity () != mc.player){
+            if (level.isClientSide() && StandController.getInstance ().isControllingStand () && ClientUtil.getCameraEntity () != mc.player){
                 ClientUtil.setCameraEntityPreventShaderSwitch(mc, mc.player);
                 ClientUtil.setOverlayMessage (new TranslationTextComponent ("jojo.message.action_condition.cant_control_stand"));
             }
         }
 
     }
+    
+    @Override
+    public RayTraceResult aimWithStandOrUser(double reachDistance, ActionTarget currentTarget) {
+        if (isMad()) {
+            RayTraceResult standOnlyAim = precisionRayTrace(this, reachDistance);
+            return standOnlyAim;
+        }
+        return super.aimWithStandOrUser(reachDistance, currentTarget);
+    }
+
+    @Override
+    public void defaultRotation() {
+        if (entityData.get(MAD_HAS_TARGET)) {
+            setYHeadRot(this.yRot);
+        }
+        else {
+            super.defaultRotation();
+        }
+    }
+    
     private boolean checkTargets(Entity entity){
         return entity.isAlive() && entity != this.getUser() && !entity.isAlliedTo(this.getUser());
     }
