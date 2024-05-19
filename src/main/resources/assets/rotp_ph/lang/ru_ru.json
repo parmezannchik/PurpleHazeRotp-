@@ -1,0 +1,18 @@
+{
+  "entity.rotp_ph.purple_haze": "Purple Haze",
+  "stand.rotp_ph.purple_haze": "Purple Haze",
+  "action.rotp_ph.purple_haze_punch": "Удар",
+  "action.rotp_ph.purple_haze_heavy_punch": "Тяжёлый удар",
+  "action.rotp_ph.purple_haze_viral_punch": "Заразный удар",
+  "action.rotp_ph.purple_haze_barrage": "Шквал ударов",
+  "action.rotp_ph.purple_haze_block": "Блокирование",
+  "action.rotp_ph.purple_haze_capsule_shot": "Бросок капсулы",
+  "action.rotp_ph.purple_haze_virus_aura": "Аура вируса",
+  "action.rotp_ph.purple_haze_madness": "Безумие",
+  "entity.rotp_ph.capsule_projectile": "Капсула с вирусом",
+  "effect.rotp_ph.ph_virus": "Смертельный вирус",
+  "jojo.message.action_condition.no_capsules_to_shot": "Не осталось капсул.",
+  "jojo.message.action_condition.cant_control_stand": "Стенд сейчас неуправляем.",
+  "jojo.message.action_condition.can_hurt_user": "Эта спосбность опасна и для меня."
+
+}
