@@ -14,6 +14,6 @@ public class PurpleHazeMadness extends StandEntityAction {
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         PurpleHazeEntity purpleHaze = (PurpleHazeEntity) standEntity;
-        purpleHaze.setMadOrNotWithAbility (!purpleHaze.isMadCauseOfAbility ());
+        purpleHaze.setMadOrNotWithAbility(!purpleHaze.isMadCauseOfAbility());
     }
 }
