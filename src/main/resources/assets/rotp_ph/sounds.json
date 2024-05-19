@@ -1,3 +1,38 @@
 {
-  
+  "ph_summon": {
+    "sounds": [ "rotp_ph:stand_user/fugo_purple_haze" ]
+  },
+  "ph_fugo_light_punch": {
+    "sounds": [ "rotp_ph:stand_user/fugo_punch1", "rotp_ph:stand_user/fugo_punch2", "rotp_ph:stand_user/fugo_punch3", "rotp_ph:stand_user/fugo_punch4"
+    ]
+  },
+  "ph_fugo_heavy_punch": {
+    "sounds": [ "rotp_ph:stand_user/fugo_heavy_punch1", "rotp_ph:stand_user/fugo_heavy_punch2" ]
+  },
+  "ph_fugo_finisher": {
+    "sounds": [ "rotp_ph:stand_user/fugo_finisher" ]
+  },
+  "ph_fugo_capsule_shot": {
+    "sounds": [ "rotp_ph:stand_user/fugo_capsule_shot1", "rotp_ph:stand_user/fugo_capsule_shot2" ]
+  },
+  "ph_fugo_aura": {
+    "sounds": [ "rotp_ph:stand_user/fugo_aura" ]
+  },
+
+
+  "ph_light_punch": {
+    "sounds": [ "rotp_ph:stand/ph_light_punch1", "rotp_ph:stand/ph_light_punch2", "rotp_ph:stand/ph_light_punch3", "rotp_ph:stand/ph_light_punch4" ]
+  },
+  "ph_heavy_punch": {
+    "sounds": [ "rotp_ph:stand/ph_heavy_punch" ]
+  },
+  "ph_finisher": {
+    "sounds": [ "rotp_ph:stand/ph_finisher" ]
+  },
+  "ph_madness": {
+    "sounds": [ "rotp_ph:stand/ph_madness" ]
+  },
+  "ph_barrage": {
+    "sounds": [ "rotp_ph:stand/ph_barrage", "rotp_ph:stand/ph_barrage2" ]
+  }
 }
