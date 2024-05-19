@@ -79,7 +79,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
             () -> new PurpleHazeVirusAura (new StandEntityAction.Builder()
                     .resolveLevelToUnlock (2)
                     .cooldown(20)
-                    .standSound(PURPLE_HAZE_AURA)
+                    .standSound(InitSounds.PURPLE_HAZE_AURA)
                     .shout(InitSounds.PURPLE_HAZE_AURA_FUGO)));
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS = ACTIONS.register("purple_haze_madness",
@@ -110,7 +110,8 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                             )
                             .rightClickHotbar(
                                     PURPLE_HAZE_BLOCK.get(),
-                                    PURPLE_HAZE_VIRUS_AURA.get ()
+                                    PURPLE_HAZE_VIRUS_AURA.get(),
+                                    PURPLE_HAZE_MADNESS.get()
 
                             )
                             .defaultStats(StandStats.class, new StandStats.Builder()
@@ -121,7 +122,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                                     .durability(3)
                                     .precision(4)
                                     .build())
-                            .addSummonShout(InitSounds.EXAMPLE_STAND_SUMMON_VOICELINE)
+                            .addSummonShout(InitSounds.PURPLE_HAZE_FUGO_SUMMON)
                             .addOst(InitSounds.PURPLE_HAZE_OST)
                             .build(),
 

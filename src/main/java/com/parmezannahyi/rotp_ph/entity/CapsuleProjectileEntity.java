@@ -75,7 +75,7 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
     protected void afterEntityHit(EntityRayTraceResult entityRayTraceResult, boolean entityHurt) {
         if (entityRayTraceResult.getEntity() instanceof LivingEntity) {
             LivingEntity target = (LivingEntity)entityRayTraceResult.getEntity();
-            PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level, 2);
+            PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level, 1);
             cloud.moveTo(target.getPosition(1));
             level.addFreshEntity(cloud);
             target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), 240, 2));
