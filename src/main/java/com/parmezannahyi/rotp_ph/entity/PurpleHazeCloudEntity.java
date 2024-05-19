@@ -34,14 +34,13 @@ public class PurpleHazeCloudEntity extends Entity {
         this.livetime++;
         Vector3d thisPos = position();
         Vector3d randomOffset = new Vector3d(
-                (random.nextDouble() * (livetime / 20) - 0.5) * (random.nextDouble() - random.nextDouble()),
+                ((livetime / 20) - 0.5) * (random.nextDouble() - random.nextDouble()),
                 random.nextDouble() * (livetime / 20) - 0.5,
-                (random.nextDouble() * (livetime/ 20) - 0.5) * (random.nextDouble() - random.nextDouble()));
+                ((livetime/ 20) - 0.5) * (random.nextDouble() - random.nextDouble()));
         Vector3d entityPosition = thisPos.add(randomOffset);
         level.getEntities(this, this.getBoundingBox().inflate(((livetime /20) - 0.5) * spreadSpeed), entity -> !(entity instanceof StandEntity)).forEach(target -> {
             if (target instanceof LivingEntity) {
                 LivingEntity livingtarget = (LivingEntity)target;
-
                 PurpleHazeVirusEffect.applyVirus(livingtarget , (int)Math.round(livetime / 80), (int)livetime / 2);
             }
         });
