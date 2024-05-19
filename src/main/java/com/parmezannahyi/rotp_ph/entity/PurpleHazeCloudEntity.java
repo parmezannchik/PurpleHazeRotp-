@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -46,8 +47,9 @@ public class PurpleHazeCloudEntity extends Entity {
         });
         for (int i = 0; i < 8; i++) {
             level.addParticle(InitParticles.PURPLE_HAZE_VIRUS.get(), entityPosition.x, entityPosition.y, entityPosition.z, 0, 0, 0);
+            level.addParticle(ParticleTypes.DRAGON_BREATH.getType (), entityPosition.x, entityPosition.y, entityPosition.z, 0, 0, 0);
         }
-        if (this.livetime == 200){
+        if ((this.livetime >= 200 && this.level.isDay ()) || (this.livetime >= 400 && !this.level.isDay ())){
             this.remove();
         }
     }
