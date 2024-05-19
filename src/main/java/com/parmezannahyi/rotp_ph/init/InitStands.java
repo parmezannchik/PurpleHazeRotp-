@@ -79,7 +79,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
             () -> new PurpleHazeVirusAura (new StandEntityAction.Builder()
                     .resolveLevelToUnlock (2)
                     .cooldown(20)
-                    .standSound(PURPLE_HAZE_AURA)
+                    .standSound(InitSounds.PURPLE_HAZE_AURA)
                     .shout(InitSounds.PURPLE_HAZE_AURA_FUGO)));
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS = ACTIONS.register("purple_haze_madness",
