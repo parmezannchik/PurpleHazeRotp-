@@ -110,7 +110,8 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                             )
                             .rightClickHotbar(
                                     PURPLE_HAZE_BLOCK.get(),
-                                    PURPLE_HAZE_VIRUS_AURA.get ()
+                                    PURPLE_HAZE_VIRUS_AURA.get(),
+                                    PURPLE_HAZE_MADNESS.get()
 
                             )
                             .defaultStats(StandStats.class, new StandStats.Builder()
