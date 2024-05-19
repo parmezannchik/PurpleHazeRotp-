@@ -114,7 +114,7 @@ public class PurpleHazeEntity extends StandEntity {
             this.setMadOrNotWithAbility(true);
             this.setAuraActive(false);
         }
-        if ((user.isAlive() && this.getUserPower ().getResolveLevel () == 0)
+        else if ((user.isAlive() && this.getUserPower ().getResolveLevel () == 0)
                 || (user.isAlive () && user.getHealth () <= 0.5*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 1)
                 || (user.isAlive () && user.getHealth () <= 0.25*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 2)
                 || (user.isAlive () && user.getHealth () <= 0.1*user.getMaxHealth () && this.getUserPower ().getResolveLevel () >= 3)) {
@@ -122,7 +122,7 @@ public class PurpleHazeEntity extends StandEntity {
             this.setAuraActive(false);
         }
         else {
-            this.setMadOrNot(false);
+            this.setMadOrNotWithAbility(false);
         }
         if (this.hasAura()) {
                 World world = this.level;
@@ -184,7 +184,9 @@ public class PurpleHazeEntity extends StandEntity {
                 }
             }
             else {
-                this.retractWhenOver();
+                if (this.getCurrentTaskAction () != InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get ()){
+                    this.retractWhenOver();
+                }
             }
 
             if (isManuallyControlled()) {
@@ -200,7 +202,7 @@ public class PurpleHazeEntity extends StandEntity {
     
     @Override
     public RayTraceResult aimWithStandOrUser(double reachDistance, ActionTarget currentTarget) {
-        if (isMad()) {
+        if (isMad() || isMadCauseOfAbility ()) {
             RayTraceResult standOnlyAim = precisionRayTrace(this, reachDistance);
             return standOnlyAim;
         }
