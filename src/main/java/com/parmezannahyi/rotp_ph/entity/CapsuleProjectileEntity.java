@@ -12,6 +12,7 @@ import com.parmezannahyi.rotp_ph.init.InitEffects;
 import com.parmezannahyi.rotp_ph.init.InitEntities;
 
 import com.parmezannahyi.rotp_ph.init.InitParticles;
+import com.parmezannahyi.rotp_ph.init.InitSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityType;
@@ -42,12 +43,11 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
     public CapsuleProjectileEntity(LivingEntity shooter, World world) {
         super(InitEntities.CAPSULE_PROJECTILE.get(), shooter, world);
     }
-
-
     @Override
     protected float getBaseDamage() {
         return 0;
     }
+
 
     @Override
     protected float getMaxHardnessBreakable() {
@@ -69,6 +69,7 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
         PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level, 1);
         cloud.moveTo(blockRayTraceResult.getLocation());
         level.addFreshEntity(cloud);
+        this.playSound (InitSounds.CAPSULE_EXPLOSION.get (), 1, 1);
         this.breakProjectile (TargetType.BLOCK, blockRayTraceResult);
     }
     @Override
@@ -79,6 +80,7 @@ public class CapsuleProjectileEntity extends ModdedProjectileEntity {
             cloud.moveTo(target.getPosition(1));
             level.addFreshEntity(cloud);
             target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), 240, 2));
+            this.playSound (InitSounds.CAPSULE_EXPLOSION.get (), 1, 1);
         }
     }
 }
