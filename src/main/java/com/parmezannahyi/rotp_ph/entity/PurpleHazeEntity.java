@@ -129,8 +129,9 @@ public class PurpleHazeEntity extends StandEntity {
                 world.addParticle(ParticleTypes.DRAGON_BREATH.getType(), this.getRandomX(1), this.getRandomY(), this.getRandomZ(1), 0, 0, 0);
                 List<LivingEntity> targets = world.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2));
                 for (LivingEntity target : targets){
-//                    if (!target.hasEffect(InitEffects.PH_VIRUS.get())) {} // фигурные скобки пустые, поэтому под этим условием и так не выполняется ничего
-                    target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), 100, 0));
+                    if (!target.hasEffect(InitEffects.PH_VIRUS.get())) {
+                        target.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), 100, 0));
+                    }
             }
         }
         if (this.isMad()) {
@@ -167,7 +168,7 @@ public class PurpleHazeEntity extends StandEntity {
                     this.moveToTarget(livingTarget);
 
                     if (this.getStaminaCondition() > 0.25) {
-                        if (this.getFinisherMeter() > 0.3 && !this.isBeingRetracted()) {
+                        if (this.getFinisherMeter() > 0.3 && !this.isBeingRetracted() && !livingTarget.isDeadOrDying ()) {
                             if (this.getCurrentTaskAction() != barrage) {
                                 this.setTask(barrage, 60, StandEntityAction.Phase.PERFORM, actionTarget);
                             }
@@ -181,6 +182,9 @@ public class PurpleHazeEntity extends StandEntity {
                             this.setTask(punch, 10, StandEntityAction.Phase.PERFORM, actionTarget);
                         }
                     }
+                }
+                else if (livingTarget.isDeadOrDying () && livingTarget.getMaxHealth () >= 20){
+                    this.getUser ().addEffect (new EffectInstance (ModStatusEffects.STAMINA_REGEN.get (), 100, 1));
                 }
             }
             else {
@@ -243,7 +247,7 @@ public class PurpleHazeEntity extends StandEntity {
     }
     
     private boolean checkTargets(Entity entity){
-        return entity.isAlive() && entity != this.getUser() && !entity.isAlliedTo(this.getUser());
+        return entity != this.getUser() && !entity.isAlliedTo(this.getUser());
     }
     public void useCapsule(){
         if (this.entityData.get(CAPSULES_COUNT) > 0) {
