@@ -133,9 +133,10 @@ public class PurpleHazeEntity extends StandEntity {
             }
         }
         if (this.isMad()) {
-            if (this.getCurrentTaskAction() == ModStandsInit.UNSUMMON_STAND_ENTITY.get()){
+            if (this.getCurrentTaskAction() == ModStandsInit.UNSUMMON_STAND_ENTITY.get() && user instanceof PlayerEntity){
+                PlayerEntity player = (PlayerEntity) this.getUser ();
                 this.stopTask();
-                ClientUtil.setOverlayMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
+                player.displayClientMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
             }
             LivingEntity livingTarget = null;
             
