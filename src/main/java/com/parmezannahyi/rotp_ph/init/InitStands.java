@@ -121,7 +121,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                                     .durability(3)
                                     .precision(4)
                                     .build())
-                            .addSummonShout(InitSounds.EXAMPLE_STAND_SUMMON_VOICELINE)
+                            .addSummonShout(InitSounds.PURPLE_HAZE_FUGO_SUMMON)
                             .addOst(InitSounds.PURPLE_HAZE_OST)
                             .build(),
 
