@@ -34,8 +34,13 @@ public class PurpleHazeEntity extends StandEntity {
         super(type, world);
     }
     boolean madness;
+    boolean madnessfromability;
     boolean auraActive;
     public void setMadOrNot(boolean set) {
+        this.madness = set;
+    }
+    public void setMadOrNotWithAbility (boolean set) {
+        this.madnessfromability = set;
         this.madness = set;
     }
     public void setAuraActive(boolean set) {
@@ -53,6 +58,9 @@ public class PurpleHazeEntity extends StandEntity {
 
     public boolean isMad() {
         return madness;
+    }
+    public boolean isMadCauseOfAbility() {
+        return madnessfromability && madness;
     }
     public boolean hasAura() {
         return auraActive;
@@ -101,7 +109,14 @@ public class PurpleHazeEntity extends StandEntity {
         if (this.isCloseToUser()) {
             this.setAuraActive(false);
         }
-        if (user.isAlive() && user.hasEffect(ModStatusEffects.RESOLVE.get())) {
+        if (user.isAlive() && this.isMadCauseOfAbility()){
+            this.setMadOrNotWithAbility(true);
+            this.setAuraActive(false);
+        }
+        if ((user.isAlive() && this.getUserPower ().getResolveLevel () == 0)
+                || (user.isAlive () && user.getHealth () <= 0.5*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 1)
+                || (user.isAlive () && user.getHealth () <= 0.25*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 2)
+                || (user.isAlive () && user.getHealth () <= 0.1*user.getMaxHealth () && this.getUserPower ().getResolveLevel () >= 3)) {
             this.setMadOrNot(true);
             this.setAuraActive(false);
         }
@@ -118,6 +133,10 @@ public class PurpleHazeEntity extends StandEntity {
             }
         }
         if (this.isMad()) {
+            if (this.getCurrentTaskAction() == ModStandsInit.UNSUMMON_STAND_ENTITY.get()){
+                this.stopTask();
+                ClientUtil.setOverlayMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
+            }
             LivingEntity livingTarget = null;
             
             Entity curTarget = getCurrentTask().map(StandEntityTask::getTarget).orElse(ActionTarget.EMPTY).getEntity();
