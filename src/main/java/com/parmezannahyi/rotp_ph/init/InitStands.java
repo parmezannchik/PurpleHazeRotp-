@@ -32,38 +32,64 @@ public class InitStands {
 
 
     // Дядя Бит крутой...
-    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTIONS.register("purple_haze_punch",
+public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTIONS.register("purple_haze_punch",
             () -> new PurpleHazePunch(new StandEntityLightAttack.Builder()
-                    .punchSound(InitSounds.PURPLE_HAZE_PUNCH_LIGHT)));
+                    .punchSound(InitSounds.PURPLE_HAZE_PUNCH_SOUND)
+                    .standSound(InitSounds.PURPLE_HAZE_PUNCH_LIGHT)
+                    .shout(InitSounds.PURPLE_HAZE_PUNCH_LIGHT_FUGO)));
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_BARRAGE = ACTIONS.register("purple_haze_barrage",
             () -> new PurpleHazeBarrage(new StandEntityMeleeBarrage.Builder()
-                    .barrageHitSound(InitSounds.PURPLE_HAZE_PUNCH_BARRAGE)));
+                    .barrageHitSound(InitSounds.PURPLE_HAZE_PUNCH_SOUND)
+                    .standSound(InitSounds.PURPLE_HAZE_PUNCH_BARRAGE)));
 
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS_BARRAGE = ACTIONS.register("purple_haze_madness_barrage",
+            () -> new PurpleHazeMadnessBarrage(new StandEntityMeleeBarrage.Builder()
+                    .standUserWalkSpeed(1F)
+                    .staminaCostTick(2F)
+                    .barrageHitSound(InitSounds.PURPLE_HAZE_PUNCH_SOUND)
+                    .standSound(InitSounds.PURPLE_HAZE_PUNCH_BARRAGE)));
 
     public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_VIRAL_PUNCH = ACTIONS.register("purple_haze_viral_punch",
-            () -> new PurpleHazeViralPunch (new StandEntityHeavyAttack.Builder()
-                    .punchSound(InitSounds.PURPLE_HAZE_PUNCH_HEAVY)
+            () -> new PurpleHazeViralPunch(new StandEntityHeavyAttack.Builder()
+                    .punchSound(InitSounds.PURPLE_HAZE_HEAVY_PUNCH_SOUND)
+                    .shout(InitSounds.PURPLE_HAZE_PUNCH_FINISHER_FUGO)
+                    .standSound(InitSounds.PURPLE_HAZE_PUNCH_FINISHER)
                     .partsRequired(StandPart.ARMS)));
 
     public static final RegistryObject<StandEntityHeavyAttack> PURPLE_HAZE_HEAVY_PUNCH = ACTIONS.register("purple_haze_heavy_punch",
             () -> new PurpleHazeHeavyPunch (new StandEntityHeavyAttack.Builder()
                     .shiftVariationOf(PURPLE_HAZE_PUNCH).shiftVariationOf(PURPLE_HAZE_BARRAGE)
                     .setFinisherVariation(PURPLE_HAZE_VIRAL_PUNCH)
-                    .punchSound(InitSounds.PURPLE_HAZE_PUNCH_HEAVY)
+                    .punchSound(InitSounds.PURPLE_HAZE_HEAVY_PUNCH_SOUND)
+                    .standSound (InitSounds.PURPLE_HAZE_PUNCH_HEAVY)
+                    .shout (InitSounds.PURPLE_HAZE_PUNCH_HEAVY_FUGO)
                     .partsRequired(StandPart.ARMS)));
-
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_BLOCK = ACTIONS.register("purple_haze_block",
             () -> new PurpleHazeBlock ());
 
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_CAPSULE_SHOT = ACTIONS.register("purple_haze_capsule_shot",
-            () -> new PurpleHazeCapsuleShot(new StandEntityAction.Builder().cooldown (20).resolveLevelToUnlock (2)));
+            () -> new PurpleHazeCapsuleShot(new StandEntityAction.Builder()
+                    .cooldown(20)
+                    .resolveLevelToUnlock(1)
+                    .shout(InitSounds.PURPLE_HAZE_CAPSULE_SHOT_FUGO)));
+    
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_VIRUS_AURA = ACTIONS.register("purple_haze_virus_aura",
-            () -> new PurpleHazeVirusAura (new StandEntityAction.Builder().resolveLevelToUnlock (3)));
+            () -> new PurpleHazeVirusAura (new StandEntityAction.Builder()
+                    .resolveLevelToUnlock (2)
+                    .cooldown(20)
+                    .standSound(PURPLE_HAZE_AURA)
+                    .shout(InitSounds.PURPLE_HAZE_AURA_FUGO)));
 
-    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS_BARRAGE = ACTIONS.register("purple_haze_madness_barrage",
-            () -> new PurpleHazeMadnessBarrage (new StandEntityMeleeBarrage.Builder ()));
+    public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS = ACTIONS.register("purple_haze_madness",
+            () -> new PurpleHazeMadness (new StandEntityAction.Builder()
+                    .holdToFire(40, false)
+                    .resolveLevelToUnlock(3)
+                    .cooldown(400)
+                    .standSound(InitSounds.PURPLE_HAZE_MADNESS)
+                    .shout(InitSounds.PURPLE_HAZE_MADNESS_FUGO)));
+
 
 
 
