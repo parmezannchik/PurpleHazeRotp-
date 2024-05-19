@@ -63,6 +63,12 @@ public static final RegistryObject<SoundEvent> PURPLE_HAZE_FUGO_SUMMON = SOUNDS.
     public static final Supplier<SoundEvent> PURPLE_HAZE_CAPSULE_SHOT_FUGO = SOUNDS.register("ph_fugo_capsule_shot",
             () -> new SoundEvent(new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "ph_fugo_capsule_shot")));
 
+    public static final Supplier<SoundEvent> CAPSULE_SHOT = SOUNDS.register("capsule_shot",
+            () -> new SoundEvent(new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "capsule_shot")));
+
+    public static final Supplier<SoundEvent> CAPSULE_EXPLOSION = SOUNDS.register("capsule_explosion",
+            () -> new SoundEvent(new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "capsule_explosion")));
+
     public static final OstSoundList PURPLE_HAZE_OST = new OstSoundList(
             new ResourceLocation(RotpPurpleHazeAddon.MOD_ID, "purple_haze_ost"), SOUNDS);
 }

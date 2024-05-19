@@ -34,5 +34,11 @@
   },
   "ph_barrage": {
     "sounds": [ "rotp_ph:stand/ph_barrage", "rotp_ph:stand/ph_barrage2" ]
+  },
+  "capsule_shot": {
+    "sounds": ["rotp_ph:capsule_shot"]
+  },
+  "capsule_explosion": {
+    "sounds": ["rotp_ph:capsule_explosion"]
   }
 }
