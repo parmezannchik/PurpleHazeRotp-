@@ -11,6 +11,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
+import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.parmezannahyi.rotp_ph.init.InitEffects;
 import com.parmezannahyi.rotp_ph.init.InitStands;
 
@@ -50,10 +51,9 @@ public class PurpleHazeEntity extends StandEntity {
 
     public void retractWhenOver(){
         if (!this.isFollowingUser()) {
-//            this.setManualControl(false, false);
+            //this.setManualControl(false, false);
             entityData.set(MAD_HAS_TARGET, false);
             this.retractStand(false);
-
         }
     }
 
@@ -86,7 +86,7 @@ public class PurpleHazeEntity extends StandEntity {
     }
 
     private void moveToTarget(LivingEntity target) {
-//        this.setManualControl(true, true);
+        //this.setManualControl(true, true);
         entityData.set(MAD_HAS_TARGET, true);
         setStandFlag(StandFlag.BEING_RETRACTED, false);
         Vector3d standPos = this.position();
@@ -98,7 +98,7 @@ public class PurpleHazeEntity extends StandEntity {
             targetPos = targetPos.subtract(vecToTarget.normalize().scale(minDistance));
             vecToTarget = targetPos.subtract(standPos);
         }
-        this.setDeltaMovement(vecToTarget.x / 10, vecToTarget.y / 32, vecToTarget.z / 10);
+        this.setDeltaMovement(vecToTarget.x / 10, vecToTarget.y / 16, vecToTarget.z / 10);
 //        this.lookAt(EntityAnchorArgument.Type.FEET, targetPos); 
         this.lookAt(EntityAnchorArgument.Type.EYES, target.getEyePosition(1));
     }
@@ -114,10 +114,10 @@ public class PurpleHazeEntity extends StandEntity {
             this.setMadOrNotWithAbility(true);
             this.setAuraActive(false);
         }
-        else if ((user.isAlive() && this.getUserPower ().getResolveLevel () == 0)
-                || (user.isAlive () && user.getHealth () <= 0.5*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 1)
-                || (user.isAlive () && user.getHealth () <= 0.25*user.getMaxHealth () && this.getUserPower ().getResolveLevel () == 2)
-                || (user.isAlive () && user.getHealth () <= 0.1*user.getMaxHealth () && this.getUserPower ().getResolveLevel () >= 3)) {
+        else if ((user.isAlive() && this.getUserPower().getResolveLevel() == 0)
+                || (user.isAlive() && user.getHealth() <= 0.5 * user.getMaxHealth () && this.getUserPower().getResolveLevel() == 1)
+                || (user.isAlive() && user.getHealth() <= 0.25 * user.getMaxHealth () && this.getUserPower().getResolveLevel() == 2)
+                || (user.isAlive() && user.getHealth() <= 0.1 * user.getMaxHealth () && this.getUserPower().getResolveLevel() >= 3)) {
             this.setMadOrNot(true);
             this.setAuraActive(false);
         }
@@ -146,7 +146,7 @@ public class PurpleHazeEntity extends StandEntity {
                 livingTarget = (LivingEntity) curTarget;
             }
             else {
-                List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange()), 
+                List<Entity> entitiesAround = this.level.getEntities(this, user.getBoundingBox().inflate(this.getMaxRange()),
                         entity -> (entity instanceof LivingEntity && this.checkTargets(entity)));
                 if (!entitiesAround.isEmpty()) {
                     Entity closestEntity = entitiesAround.stream()
@@ -184,7 +184,8 @@ public class PurpleHazeEntity extends StandEntity {
                 }
             }
             else {
-                if (this.getCurrentTaskAction () != InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get ()){
+                if (this.getCurrentTaskAction () != InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get()){
+                    this.stopTask ();
                     this.retractWhenOver();
                 }
             }
@@ -201,12 +202,34 @@ public class PurpleHazeEntity extends StandEntity {
     }
     
     @Override
-    public RayTraceResult aimWithStandOrUser(double reachDistance, ActionTarget currentTarget) {
-        if (isMad() || isMadCauseOfAbility ()) {
-            RayTraceResult standOnlyAim = precisionRayTrace(this, reachDistance);
-            return standOnlyAim;
+    public ActionTarget aimWithThisOrUser(double reachDistance, ActionTarget currentTarget) {
+        ActionTarget target;
+        if (currentTarget.getType() == ActionTarget.TargetType.ENTITY && isTargetInReach(currentTarget)) {
+            target = currentTarget;
         }
-        return super.aimWithStandOrUser(reachDistance, currentTarget);
+        else {
+            RayTraceResult aim = null;
+            if (!isManuallyControlled()) {
+                LivingEntity user = getUser();
+                if (user != null) {
+                    aim = precisionRayTrace(user, reachDistance);
+                }
+            }
+            if (aim == null || this.isMad()) {
+                aim = precisionRayTrace(this, reachDistance);
+            }
+
+            target = ActionTarget.fromRayTraceResult(aim);
+        }
+
+        if (target.getEntity() != this) {
+            Vector3d targetPos = target.getTargetPos(true);
+            if (targetPos != null) {
+                MCUtil.rotateTowards(this, targetPos, (float) getAttackSpeed() / 16F * 18F);
+            }
+        }
+
+        return target;
     }
 
     @Override
