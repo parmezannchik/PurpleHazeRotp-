@@ -29,14 +29,15 @@ public class PurpleHazeVirusEffect extends UncurableEffect {
     public void applyEffectTick(LivingEntity entity, int level) {
         entity.hurt(DamageSource.MAGIC, level + 0.5F);
     }
-    public static void applyVirus(LivingEntity entity, int level, int duration){
+    public static void applyVirus(LivingEntity entity, int level, int duration) {
         // if (!entity.hasEffect(InitEffects.VIRUS_IMMUNE.get())){ //для Голда Екиспиренса
-        BlockPos pos = new BlockPos(entity.getPosition(1));
-        if (entity.level.isDay() && entity.level.canSeeSky(pos)){
-            duration = duration / 2;
-            level = Math.round((float) level/2);
+        if (!entity.level.isClientSide()){
+            if (entity.level.isDay() && entity.level.canSeeSky(entity.blockPosition())) {
+                duration = duration / 2;
+                level = Math.round((float) level / 2);
+            }
+            entity.addEffect(new EffectInstance (InitEffects.PH_VIRUS.get(), duration, level));
         }
-        entity.addEffect(new EffectInstance(InitEffects.PH_VIRUS.get(), duration, level));
     }
     //}
 }
