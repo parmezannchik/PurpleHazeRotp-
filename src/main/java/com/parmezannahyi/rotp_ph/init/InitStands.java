@@ -119,7 +119,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                                     .power(14)
                                     .speed(12)
                                     .range(5, 10)
-                                    .durability(3)
+                                    .durability(4)
                                     .precision(4)
                                     .build())
                             .addSummonShout(InitSounds.PURPLE_HAZE_FUGO_SUMMON)
