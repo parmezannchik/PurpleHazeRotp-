@@ -13,6 +13,6 @@
   "effect.rotp_ph.ph_virus": "Смертельный вирус",
   "jojo.message.action_condition.no_capsules_to_shot": "Не осталось капсул.",
   "jojo.message.action_condition.cant_control_stand": "Стенд сейчас неуправляем.",
-  "jojo.message.action_condition.can_hurt_user": "Эта спосбность опасна и для меня."
+  "jojo.message.action_condition.can_hurt_user": "Эта способность опасна и для меня."
 
 }
