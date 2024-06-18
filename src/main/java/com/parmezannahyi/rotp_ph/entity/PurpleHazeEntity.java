@@ -110,19 +110,9 @@ public class PurpleHazeEntity extends StandEntity {
         if (this.isCloseToUser()) {
             this.setAuraActive(false);
         }
-        if (user.isAlive() && this.isMadCauseOfAbility()){
-            this.setMadOrNotWithAbility(true);
-            this.setAuraActive(false);
-        }
-        else if ((user.isAlive() && this.getUserPower().getResolveLevel() == 0)
-                || (user.isAlive() && user.getHealth() <= 0.5 * user.getMaxHealth () && this.getUserPower().getResolveLevel() == 1)
-                || (user.isAlive() && user.getHealth() <= 0.25 * user.getMaxHealth () && this.getUserPower().getResolveLevel() == 2)
-                || (user.isAlive() && user.getHealth() <= 0.1 * user.getMaxHealth () && this.getUserPower().getResolveLevel() >= 3)) {
-            this.setMadOrNot(true);
-            this.setAuraActive(false);
-        }
-        else {
-            this.setMadOrNotWithAbility(false);
+        if (user != null && user.isAlive() && this.isMadCauseOfAbility ()) {
+            this.setMadOrNotWithAbility (true);
+            this.setAuraActive (false);
         }
         if (this.hasAura()) {
                 World world = this.level;

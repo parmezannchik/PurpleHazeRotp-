@@ -19,9 +19,6 @@ public class InitEntities {
             ForgeRegistries.ENTITIES, RotpPurpleHazeAddon.MOD_ID);
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(InitStands.PURPLE_HAZE_STAND.getEntityType(), PurpleHazeRenderer::new);
-
-
-
     }
     public static final RegistryObject<EntityType<CapsuleProjectileEntity>> CAPSULE_PROJECTILE = ENTITIES.register("capsule_projectile",
             () -> EntityType.Builder.<CapsuleProjectileEntity>of(CapsuleProjectileEntity::new, EntityClassification.MISC)
