@@ -38,6 +38,7 @@ public class PurpleHazeEntity extends StandEntity {
     boolean madness;
     boolean madnessfromability;
     boolean auraActive;
+    private LivingEntity autoAttackTarget = null;
     public void setMadOrNot(boolean set) {
         this.madness = set;
     }
@@ -49,9 +50,8 @@ public class PurpleHazeEntity extends StandEntity {
         this.auraActive = set;
     }
 
-    public void retractWhenOver(){
+    public void retractWhenOver() {
         if (!this.isFollowingUser()) {
-            //this.setManualControl(false, false);
             entityData.set(MAD_HAS_TARGET, false);
             this.retractStand(false);
         }
@@ -68,11 +68,27 @@ public class PurpleHazeEntity extends StandEntity {
     }
 
     float madnessBarrageTime = 0;
+    public void setAutoAttackTarget(LivingEntity entity) {
+        this.autoAttackTarget = entity;
+        if (entity == null) {
+            if (entityData.get(MAD_HAS_TARGET)) {
+                this.retractStand(false);
+            }
+            entityData.set(MAD_HAS_TARGET, false);
+        }
+    }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(CAPSULES_COUNT, 6);
         entityData.define(MAD_HAS_TARGET, false);
+    }
+    @Override
+    protected boolean setTask(StandEntityTask task) {
+        if (!level.isClientSide() && (task == null || task.getAction() == InitStands.PURPLE_HAZE_MADNESS.get())) {
+            setAutoAttackTarget(null);
+        }
+        return super.setTask(task);
     }
 
     @Override
@@ -86,7 +102,6 @@ public class PurpleHazeEntity extends StandEntity {
     }
 
     private void moveToTarget(LivingEntity target) {
-        //this.setManualControl(true, true);
         entityData.set(MAD_HAS_TARGET, true);
         setStandFlag(StandFlag.BEING_RETRACTED, false);
         Vector3d standPos = this.position();
@@ -99,7 +114,6 @@ public class PurpleHazeEntity extends StandEntity {
             vecToTarget = targetPos.subtract(standPos);
         }
         this.setDeltaMovement(vecToTarget.x / 10, vecToTarget.y / 16, vecToTarget.z / 10);
-//        this.lookAt(EntityAnchorArgument.Type.FEET, targetPos); 
         this.lookAt(EntityAnchorArgument.Type.EYES, target.getEyePosition(1));
     }
 
@@ -107,6 +121,7 @@ public class PurpleHazeEntity extends StandEntity {
     public void tick() {
         super.tick();
         LivingEntity user = this.getUser();
+        World world = this.level;
         if (this.isCloseToUser()) {
             this.setAuraActive(false);
         }
@@ -115,7 +130,6 @@ public class PurpleHazeEntity extends StandEntity {
             this.setAuraActive (false);
         }
         if (this.hasAura()) {
-                World world = this.level;
                 world.addParticle(ParticleTypes.DRAGON_BREATH.getType(), this.getRandomX(1), this.getRandomY(), this.getRandomZ(1), 0, 0, 0);
                 List<LivingEntity> targets = world.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2));
                 for (LivingEntity target : targets){
@@ -126,7 +140,7 @@ public class PurpleHazeEntity extends StandEntity {
         }
         if (this.isMad()) {
             if (this.getCurrentTaskAction() == ModStandsInit.UNSUMMON_STAND_ENTITY.get() && user instanceof PlayerEntity){
-                PlayerEntity player = (PlayerEntity) this.getUser ();
+                PlayerEntity player = (PlayerEntity) this.getUser();
                 this.stopTask();
                 player.displayClientMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
             }
@@ -194,7 +208,7 @@ public class PurpleHazeEntity extends StandEntity {
         }
 
     }
-    
+
     @Override
     public ActionTarget aimWithThisOrUser(double reachDistance, ActionTarget currentTarget) {
         ActionTarget target;
@@ -209,7 +223,7 @@ public class PurpleHazeEntity extends StandEntity {
                     aim = precisionRayTrace(user, reachDistance);
                 }
             }
-            if (aim == null || this.isMad()) {
+            if (aim == null || autoAttackTarget != null) {
                 aim = precisionRayTrace(this, reachDistance);
             }
 
@@ -235,8 +249,8 @@ public class PurpleHazeEntity extends StandEntity {
             super.defaultRotation();
         }
     }
-    
-    private boolean checkTargets(Entity entity){
+
+    public boolean checkTargets(Entity entity){
         return entity != this.getUser() && !entity.isAlliedTo(this.getUser());
     }
     public void useCapsule(){
