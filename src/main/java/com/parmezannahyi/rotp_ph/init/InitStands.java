@@ -88,6 +88,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
                     .resolveLevelToUnlock(3)
                     .cooldown(400)
                     .standSound(StandEntityAction.Phase.BUTTON_HOLD, InitSounds.PURPLE_HAZE_MADNESS)
+                    .partsRequired(StandPart.MAIN_BODY)
                     .shout(InitSounds.PURPLE_HAZE_MADNESS_FUGO)));
 
 
