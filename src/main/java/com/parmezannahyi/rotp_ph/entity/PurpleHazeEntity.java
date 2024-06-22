@@ -125,9 +125,15 @@ public class PurpleHazeEntity extends StandEntity {
         if (this.isCloseToUser()) {
             this.setAuraActive(false);
         }
-        if (user != null && user.isAlive() && this.isMadCauseOfAbility ()) {
-            this.setMadOrNotWithAbility (true);
-            this.setAuraActive (false);
+        if (user != null && user.isAlive() && this.isMadCauseOfAbility()) {
+            this.setAuraActive(false);
+        }
+        else if ((user.isAlive() && this.getUserPower().getResolveLevel() == 0)
+                || (user.isAlive() && user.getHealth() <= 0.5 * user.getMaxHealth() && this.getUserPower().getResolveLevel() == 1)
+                || (user.isAlive() && user.getHealth() <= 0.25 * user.getMaxHealth() && this.getUserPower().getResolveLevel() == 2)
+                || (user.isAlive() && user.getHealth() <= 0.1 * user.getMaxHealth() && this.getUserPower().getResolveLevel() >= 3)) {
+            this.setMadOrNot(true);
+            this.setAuraActive(false);
         }
         if (this.hasAura()) {
                 world.addParticle(ParticleTypes.DRAGON_BREATH.getType(), this.getRandomX(1), this.getRandomY(), this.getRandomZ(1), 0, 0, 0);
@@ -163,7 +169,8 @@ public class PurpleHazeEntity extends StandEntity {
                 }
             }
             
-            if (livingTarget != null) {
+            if (livingTarget != null && livingTarget.isAlive()) {
+                autoAttackTarget = livingTarget;
                 if (livingTarget.getHealth() > 0) {
                     ActionTarget actionTarget = new ActionTarget(livingTarget);
                     StandEntityAction punch = InitStands.PURPLE_HAZE_PUNCH.get();
@@ -187,7 +194,7 @@ public class PurpleHazeEntity extends StandEntity {
                         }
                     }
                 }
-                else if (livingTarget.isDeadOrDying () && livingTarget.getMaxHealth () >= 20){
+                else if (livingTarget.isDeadOrDying () && livingTarget.getMaxHealth () >= 20) {
                     this.getUser ().addEffect (new EffectInstance (ModStatusEffects.STAMINA_REGEN.get (), 100, 1));
                 }
             }
@@ -223,7 +230,7 @@ public class PurpleHazeEntity extends StandEntity {
                     aim = precisionRayTrace(user, reachDistance);
                 }
             }
-            if (aim == null || autoAttackTarget != null) {
+            if (aim == null || (this.isMad() && autoAttackTarget != null)) {
                 aim = precisionRayTrace(this, reachDistance);
             }
 
