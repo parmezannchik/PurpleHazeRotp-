@@ -23,21 +23,23 @@ public class PurpleHazeMadness extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         if (!world.isClientSide()) {
             PurpleHazeEntity purpleHaze = (PurpleHazeEntity) standEntity;
-            purpleHaze.setMadOrNotWithAbility(true);
-            Entity cameraEntity = standEntity.isManuallyControlled() ? standEntity : userPower.getUser();
-            Vector3d eyePos = cameraEntity.getEyePosition(1);
-            AxisAlignedBB targetsBox = new AxisAlignedBB(eyePos, eyePos).inflate(32, 32, 32);
-            List<Entity> potentialTargets = world.getEntities(purpleHaze, targetsBox,
-                    entity -> (entity instanceof LivingEntity && purpleHaze.checkTargets(entity)));
-            Vector3d lookVec = cameraEntity.getLookAngle();
-            Optional<Entity> entityLookedAt = potentialTargets.stream().max(Comparator.comparingDouble(
-                    entity -> {
-                        Vector3d targetPos = entity.getBoundingBox().getCenter();
-                        Vector3d vecToTarget = targetPos.subtract(eyePos).normalize();
-                        double angleCos = lookVec.dot(vecToTarget);
-                        return angleCos;
-                    }));
-            entityLookedAt.ifPresent(target -> purpleHaze.setAutoAttackTarget((LivingEntity) target));
+            purpleHaze.setMadOrNotWithAbility(!purpleHaze.isMadCauseOfAbility());
+            if (!purpleHaze.isMadCauseOfAbility()){
+                Entity cameraEntity = standEntity.isManuallyControlled() ? standEntity : userPower.getUser();
+                Vector3d eyePos = cameraEntity.getEyePosition(1);
+                AxisAlignedBB targetsBox = new AxisAlignedBB(eyePos, eyePos).inflate(32, 32, 32);
+                List<Entity> potentialTargets = world.getEntities(purpleHaze, targetsBox,
+                        entity -> (entity instanceof LivingEntity && purpleHaze.checkTargets(entity)));
+                Vector3d lookVec = cameraEntity.getLookAngle();
+                Optional<Entity> entityLookedAt = potentialTargets.stream().max(Comparator.comparingDouble(
+                        entity -> {
+                            Vector3d targetPos = entity.getBoundingBox().getCenter();
+                            Vector3d vecToTarget = targetPos.subtract(eyePos).normalize();
+                            double angleCos = lookVec.dot(vecToTarget);
+                            return angleCos;
+                        }));
+                entityLookedAt.ifPresent(target -> purpleHaze.setAutoAttackTarget((LivingEntity) target));
+            }
         }
     }
 }
