@@ -12,6 +12,8 @@ import com.parmezannahyi.rotp_ph.entity.PurpleHazeEntity;
 import com.parmezannahyi.rotp_ph.init.InitStands;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
+import javax.annotation.Nullable;
+
 // Exported for Minecraft version 1.15 - 1.16 with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
@@ -260,34 +262,37 @@ public class PurpleHazeModel extends HumanoidStandModel<PurpleHazeEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(PurpleHazeEntity entity, float walkAnimPos, float walkAnimSpeed, float partialTick) {
+	public void prepareMobModel(@Nullable PurpleHazeEntity entity, float walkAnimPos, float walkAnimSpeed, float partialTick) {
 		super.prepareMobModel (entity, walkAnimPos, walkAnimSpeed, partialTick);
-		if (entity.getCapsuleCount () <= 5) {
-			this.capsule1.visible = false;
-			if (entity.getCapsuleCount () <= 4){
-				this.capsule2.visible = false;
-				if (entity.getCapsuleCount () <= 3) {
-					this.capsule3.visible = false;
-					if (entity.getCapsuleCount () <= 2) {
-						this.capsule4.visible = false;
-						if (entity.getCapsuleCount () <= 1) {
-							this.capsule5.visible = false;
-							if (entity.getCapsuleCount () <= 0) {
-								this.capsule6.visible = false;
+		if (entity != null){
+			if (entity.getCapsuleCount () <= 5) {
+				this.capsule1.visible = false;
+				if (entity.getCapsuleCount () <= 4){
+					this.capsule2.visible = false;
+					if (entity.getCapsuleCount () <= 3) {
+						this.capsule3.visible = false;
+						if (entity.getCapsuleCount () <= 2) {
+							this.capsule4.visible = false;
+							if (entity.getCapsuleCount () <= 1) {
+								this.capsule5.visible = false;
+								if (entity.getCapsuleCount () <= 0) {
+									this.capsule6.visible = false;
+								}
 							}
 						}
 					}
 				}
 			}
+			else {
+				this.capsule1.visible = true;
+				this.capsule2.visible = true;
+				this.capsule3.visible = true;
+				this.capsule4.visible = true;
+				this.capsule5.visible = true;
+				this.capsule6.visible = true;
+			}
 		}
-		else {
-			this.capsule1.visible = true;
-			this.capsule2.visible = true;
-			this.capsule3.visible = true;
-			this.capsule4.visible = true;
-			this.capsule5.visible = true;
-			this.capsule6.visible = true;
-		}
+
 	}
 
 
