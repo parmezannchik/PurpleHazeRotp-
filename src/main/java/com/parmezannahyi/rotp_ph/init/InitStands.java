@@ -72,7 +72,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_CAPSULE_SHOT = ACTIONS.register("purple_haze_capsule_shot",
             () -> new PurpleHazeCapsuleShot(new StandEntityAction.Builder()
                     .cooldown(20)
-                    .resolveLevelToUnlock(1)
+                    .resolveLevelToUnlock(3)
                     .shout(InitSounds.PURPLE_HAZE_CAPSULE_SHOT_FUGO)));
     
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_VIRUS_AURA = ACTIONS.register("purple_haze_virus_aura",
@@ -85,7 +85,7 @@ public static final RegistryObject<StandEntityAction> PURPLE_HAZE_PUNCH = ACTION
     public static final RegistryObject<StandEntityAction> PURPLE_HAZE_MADNESS = ACTIONS.register("purple_haze_madness",
             () -> new PurpleHazeMadness (new StandEntityAction.Builder()
                     .holdToFire(40, false)
-                    .resolveLevelToUnlock(3)
+                    .resolveLevelToUnlock(1)
                     .cooldown(400)
                     .standSound(StandEntityAction.Phase.BUTTON_HOLD, InitSounds.PURPLE_HAZE_MADNESS)
                     .partsRequired(StandPart.MAIN_BODY)
