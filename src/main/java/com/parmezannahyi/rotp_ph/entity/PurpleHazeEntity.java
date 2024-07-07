@@ -51,7 +51,7 @@ public class PurpleHazeEntity extends StandEntity {
     }
 
     public void retractWhenOver() {
-        if (!this.isFollowingUser()) {
+        if (!this.isFollowingUser() && !this.isBeingRetracted() && this.getCurrentTaskAction() != ModStandsInit.UNSUMMON_STAND_ENTITY.get()) {
             entityData.set(MAD_HAS_TARGET, false);
             this.retractStand(false);
         }
@@ -72,7 +72,9 @@ public class PurpleHazeEntity extends StandEntity {
         this.autoAttackTarget = entity;
         if (entity == null) {
             if (entityData.get(MAD_HAS_TARGET)) {
-                this.retractStand(false);
+                if (this.getCurrentTaskAction() != ModStandsInit.UNSUMMON_STAND_ENTITY.get()){
+                    this.retractStand(false);
+                }
             }
             entityData.set(MAD_HAS_TARGET, false);
         }
@@ -128,10 +130,10 @@ public class PurpleHazeEntity extends StandEntity {
         if (user != null && user.isAlive() && this.isMadCauseOfAbility()) {
             this.setAuraActive(false);
         }
-        else if ((user.isAlive() && this.getUserPower().getResolveLevel() == 0)
+        else if (user != null && !this.isArmsOnlyMode() && ((user.isAlive() && this.getUserPower().getResolveLevel() == 0)
                 || (user.isAlive() && user.getHealth() <= 0.5 * user.getMaxHealth() && this.getUserPower().getResolveLevel() == 1)
                 || (user.isAlive() && user.getHealth() <= 0.25 * user.getMaxHealth() && this.getUserPower().getResolveLevel() == 2)
-                || (user.isAlive() && user.getHealth() <= 0.1 * user.getMaxHealth() && this.getUserPower().getResolveLevel() >= 3)) {
+                || (user.isAlive() && user.getHealth() <= 0.1 * user.getMaxHealth() && this.getUserPower().getResolveLevel() >= 3)) && this.getUserPower().getStamina() > 0) {
             this.setMadOrNot(true);
             this.setAuraActive(false);
         }
@@ -144,14 +146,8 @@ public class PurpleHazeEntity extends StandEntity {
                     }
             }
         }
-        if (this.isMad()) {
-            if (this.getCurrentTaskAction() == ModStandsInit.UNSUMMON_STAND_ENTITY.get() && user instanceof PlayerEntity){
-                PlayerEntity player = (PlayerEntity) this.getUser();
-                this.stopTask();
-                player.displayClientMessage(new TranslationTextComponent("jojo.message.action_condition.cant_control_stand"), true);
-            }
+        if (this.isMad() && user != null) {
             LivingEntity livingTarget = null;
-            
             Entity curTarget = getCurrentTask().map(StandEntityTask::getTarget).orElse(ActionTarget.EMPTY).getEntity();
             if (curTarget instanceof LivingEntity && curTarget.isAlive() && curTarget.distanceToSqr(user) < getMaxRange() * getMaxRange()) {
                 livingTarget = (LivingEntity) curTarget;
@@ -168,7 +164,6 @@ public class PurpleHazeEntity extends StandEntity {
                     livingTarget = (LivingEntity) closestEntity; 
                 }
             }
-            
             if (livingTarget != null && livingTarget.isAlive()) {
                 autoAttackTarget = livingTarget;
                 if (livingTarget.getHealth() > 0) {
@@ -177,7 +172,6 @@ public class PurpleHazeEntity extends StandEntity {
                     StandEntityAction barrage = InitStands.PURPLE_HAZE_MADNESS_BARRAGE.get();
                     StandEntityAction heavyPunch = InitStands.PURPLE_HAZE_HEAVY_PUNCH.get();
                     this.moveToTarget(livingTarget);
-
                     if (this.getStaminaCondition() > 0.25) {
                         if (this.getFinisherMeter() > 0.3 && !this.isBeingRetracted() && !livingTarget.isDeadOrDying ()) {
                             if (this.getCurrentTaskAction() != barrage) {
@@ -194,8 +188,8 @@ public class PurpleHazeEntity extends StandEntity {
                         }
                     }
                 }
-                else if (livingTarget.isDeadOrDying () && livingTarget.getMaxHealth () >= 20) {
-                    this.getUser ().addEffect (new EffectInstance (ModStatusEffects.STAMINA_REGEN.get (), 100, 1));
+                else if (livingTarget.isDeadOrDying() && livingTarget.getMaxHealth() >= 20){
+                    this.getUser().addEffect(new EffectInstance(ModStatusEffects.STAMINA_REGEN.get(), 100, 1));
                 }
             }
             else {
@@ -258,7 +252,7 @@ public class PurpleHazeEntity extends StandEntity {
     }
 
     public boolean checkTargets(Entity entity){
-        return entity != this.getUser() && !entity.isAlliedTo(this.getUser());
+        return this.getUser() !=null && entity != this.getUser() && !entity.isAlliedTo(this.getUser());
     }
     public void useCapsule(){
         if (this.entityData.get(CAPSULES_COUNT) > 0) {
