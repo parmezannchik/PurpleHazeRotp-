@@ -40,6 +40,9 @@ public class PurpleHazeMadness extends StandEntityAction {
                         }));
                 entityLookedAt.ifPresent(target -> purpleHaze.setAutoAttackTarget((LivingEntity) target));
             }
+            else {
+                purpleHaze.setAutoAttackTarget(null);
+            }
         }
     }
 }
